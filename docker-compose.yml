@@ -4,34 +4,36 @@ services:
   nginx:
     image: nginx:latest
     volumes:
-      - /var/www/bitrix:/var/www/bitrix
+      - /var/www/bitrix_new:/var/www/bitrix_new
       - ./_docker/nginx/conf.d/:/etc/nginx/conf.d
     ports:
-      - "8076:80"
+      - "8077:80"
     depends_on:
       - app
-    container_name: bitrix_nginx
+    container_name: bitrix_two_nginx
 
   app:
     build:
       context: .
       dockerfile: _docker/app/Dockerfile
     volumes:
-      - /var/www/bitrix:/var/www/bitrix
+      - /var/www/bitrix_new:/var/www/bitrix_new
     depends_on:
       - db
-    container_name: bitrix_app
+    user: 1000:1000
+    container_name: bitrix_two_app
 
   db:
     image: mysql:8.0
     restart: always
     volumes:
-      - /var/www/bitrix/tmp/db
+      - ./tmp/db:/var/lib/mysql
     environment:
-        MYSQL_DATABASE: lardocker
-        MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: lardocker
+      MYSQL_ROOT_PASSWORD: root
     ports:
-      - 8101:3306
+      - 8102:3306
     command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
-    container_name: bitrix_db
+    container_name: bitrix_two_db
 
+  
