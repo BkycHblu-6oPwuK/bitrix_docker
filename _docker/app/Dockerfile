@@ -22,6 +22,8 @@ RUN chmod -R 777 /var/www && \
 # Очистка
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+WORKDIR /var/www/bitrix
+
 COPY ./_docker/app/php.ini /usr/local/etc/php/conf.d/php.ini
 
 
@@ -31,4 +33,4 @@ COPY ./_docker/app/php.ini /usr/local/etc/php/conf.d/php.ini
 #     --filename=composer \
 #     --install-dir=/usr/local/bin
 
-# WORKDIR /www
+
