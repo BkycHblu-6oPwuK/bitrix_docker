@@ -15,11 +15,15 @@ RUN apt-get update && apt-get install -y \
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install pdo_mysql mysqli bcmath gd zip
 
-    # Install composer
+# Install composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN curl -sS https://getcomposer.org/installer | php -- \
     --filename=composer \
     --install-dir=/usr/local/bin
+
+# Install nodenpm
+RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - && \
+apt-get install -y nodejs
 
 # Устанавливаем права доступа для /var/www и /tmp
 RUN chmod -R 777 /var/www && \
