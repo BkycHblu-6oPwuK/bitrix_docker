@@ -18,6 +18,9 @@ services:
       dockerfile: _docker/app/Dockerfile
     volumes:
       - ./bitrix:/var/www/bitrix
+    ports:
+      - "9000:9000"
+      - "5173:5173"
     depends_on:
       - db
     user: 1000:1000
