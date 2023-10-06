@@ -1,4 +1,4 @@
-nginx, php-fpm 8.1, mysql 8.0, node 20.x
+nginx, php-fpm, mysql, node 20.x
 
 Ubuntu ставил версии 22.04.2 LTS.
 
