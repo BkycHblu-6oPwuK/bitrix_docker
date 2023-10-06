@@ -2,15 +2,36 @@ version: '3'
 
 services:
   nginx:
-    image: nginx:latest
+    image: jwilder/nginx-proxy
     volumes:
       - ./bitrix:/var/www/bitrix
       - ./_docker/nginx/conf.d/:/etc/nginx/conf.d
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./certs:/etc/nginx/certs:rw
+      - ./vhost.d:/etc/nginx/vhost.d
+      - ./html:/usr/share/nginx/html
     ports:
       - "80:80"
-    depends_on:
-      - app
+      - "443:443"
     container_name: bitrix_nginx
+    environment:
+      - DEFAULT_HOST=default.local
+
+  whoami:
+    image: jwilder/whoami
+    environment:
+      - VIRTUAL_HOST=mywebsite.local
+
+  letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: nginx-letsencrypt
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./certs:/etc/nginx/certs:rw
+      - ./vhost.d:/etc/nginx/vhost.d
+      - ./html:/usr/share/nginx/html
+    environment:
+      - NGINX_PROXY_CONTAINER=bitrix_nginx
 
   app:
     build:
@@ -20,19 +41,18 @@ services:
       - ./bitrix:/var/www/bitrix
     ports:
       - "9000:9000"
-      - "5173:5173"
     depends_on:
       - db
     user: 1000:1000
     container_name: bitrix_app
 
   db:
-    image: mysql:8.0
+    image: mysql:5.7
     restart: always
     volumes:
       - ./tmp/db:/var/lib/mysql
     environment:
-      MYSQL_DATABASE: bitrix
+      MYSQL_DATABASE: bitrix_two
       MYSQL_ROOT_PASSWORD: root
     ports:
       - 8102:3306

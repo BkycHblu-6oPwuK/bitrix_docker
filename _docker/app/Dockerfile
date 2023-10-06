@@ -22,8 +22,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
     --install-dir=/usr/local/bin
 
 # Install nodenpm
-RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - && \
-apt-get install -y nodejs
+# RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - && \
+# apt-get install -y nodejs
 
 # Устанавливаем права доступа для /var/www и /tmp
 RUN chmod -R 777 /var/www && \
